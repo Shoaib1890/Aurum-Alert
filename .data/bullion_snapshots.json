@@ -1,0 +1,267 @@
+[
+  {
+    "id": "snap_1795287354554",
+    "recordedAt": "2026-11-21T18:55:54.554Z",
+    "rates": {
+      "gold_24k": {
+        "metalType": "gold_24k",
+        "metalName": "24 Karat Fine Gold",
+        "purity": "99.9% Pure (International Spot in INR)",
+        "price": 105085,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3694,
+        "changePercentage": -3.4,
+        "previousClose": 108779,
+        "tradingDate": "2026-11-21T18:55:23.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:55:23.000Z"
+      },
+      "gold_22k": {
+        "metalType": "gold_22k",
+        "metalName": "22 Karat Standard Gold",
+        "purity": "91.6% Pure (916 Hallmark Standard)",
+        "price": 96328,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3386,
+        "changePercentage": -3.4,
+        "previousClose": 99714,
+        "tradingDate": "2026-11-21T18:55:23.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:55:23.000Z"
+      },
+      "silver": {
+        "metalType": "silver",
+        "metalName": "Fine Silver 999",
+        "purity": "99.9% Pure Silver (1kg Bar Spot)",
+        "price": 122482,
+        "currency": "INR",
+        "unit": "1kg",
+        "changeAmount": -6115,
+        "changePercentage": -4.76,
+        "previousClose": 128597,
+        "tradingDate": "2026-11-21T18:55:23.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:55:23.000Z"
+      }
+    },
+    "provider": "GoldAPI.io (Live Spot Feed)",
+    "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates"
+  },
+  {
+    "id": "snap_1795287273685",
+    "recordedAt": "2026-11-21T18:54:33.685Z",
+    "rates": {
+      "gold_24k": {
+        "metalType": "gold_24k",
+        "metalName": "24 Karat Fine Gold",
+        "purity": "99.9% Pure (International Spot in INR)",
+        "price": 105085,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3694,
+        "changePercentage": -3.4,
+        "previousClose": 108779,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      },
+      "gold_22k": {
+        "metalType": "gold_22k",
+        "metalName": "22 Karat Standard Gold",
+        "purity": "91.6% Pure (916 Hallmark Standard)",
+        "price": 96328,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3386,
+        "changePercentage": -3.4,
+        "previousClose": 99714,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      },
+      "silver": {
+        "metalType": "silver",
+        "metalName": "Fine Silver 999",
+        "purity": "99.9% Pure Silver (1kg Bar Spot)",
+        "price": 122482,
+        "currency": "INR",
+        "unit": "1kg",
+        "changeAmount": -6115,
+        "changePercentage": -4.76,
+        "previousClose": 128597,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      }
+    },
+    "provider": "GoldAPI.io (Live Spot Feed)",
+    "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates"
+  },
+  {
+    "id": "snap_1795287097432",
+    "recordedAt": "2026-11-21T18:51:37.432Z",
+    "rates": {
+      "gold_24k": {
+        "metalType": "gold_24k",
+        "metalName": "24 Karat Fine Gold",
+        "purity": "99.9% Pure (International Spot in INR)",
+        "price": 105085,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3694,
+        "changePercentage": -3.4,
+        "previousClose": 108779,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      },
+      "gold_22k": {
+        "metalType": "gold_22k",
+        "metalName": "22 Karat Standard Gold",
+        "purity": "91.6% Pure (916 Hallmark Standard)",
+        "price": 96328,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3386,
+        "changePercentage": -3.4,
+        "previousClose": 99714,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      },
+      "silver": {
+        "metalType": "silver",
+        "metalName": "Fine Silver 999",
+        "purity": "99.9% Pure Silver (1kg Bar Spot)",
+        "price": 122482,
+        "currency": "INR",
+        "unit": "1kg",
+        "changeAmount": -6115,
+        "changePercentage": -4.76,
+        "previousClose": 128597,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      }
+    },
+    "provider": "GoldAPI.io (Live Spot Feed)",
+    "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates"
+  },
+  {
+    "id": "snap_1795287081991",
+    "recordedAt": "2026-11-21T18:51:21.991Z",
+    "rates": {
+      "gold_24k": {
+        "metalType": "gold_24k",
+        "metalName": "24 Karat Fine Gold",
+        "purity": "99.9% Pure (International Spot in INR)",
+        "price": 105085,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3694,
+        "changePercentage": -3.4,
+        "previousClose": 108779,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      },
+      "gold_22k": {
+        "metalType": "gold_22k",
+        "metalName": "22 Karat Standard Gold",
+        "purity": "91.6% Pure (916 Hallmark Standard)",
+        "price": 96328,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3386,
+        "changePercentage": -3.4,
+        "previousClose": 99714,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      },
+      "silver": {
+        "metalType": "silver",
+        "metalName": "Fine Silver 999",
+        "purity": "99.9% Pure Silver (1kg Bar Spot)",
+        "price": 122482,
+        "currency": "INR",
+        "unit": "1kg",
+        "changeAmount": -6115,
+        "changePercentage": -4.76,
+        "previousClose": 128597,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      }
+    },
+    "provider": "GoldAPI.io (Live Spot Feed)",
+    "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates"
+  },
+  {
+    "id": "snap_1795287071699",
+    "recordedAt": "2026-11-21T18:51:11.699Z",
+    "rates": {
+      "gold_24k": {
+        "metalType": "gold_24k",
+        "metalName": "24 Karat Fine Gold",
+        "purity": "99.9% Pure (International Spot in INR)",
+        "price": 105085,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3694,
+        "changePercentage": -3.4,
+        "previousClose": 108779,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      },
+      "gold_22k": {
+        "metalType": "gold_22k",
+        "metalName": "22 Karat Standard Gold",
+        "purity": "91.6% Pure (916 Hallmark Standard)",
+        "price": 96328,
+        "currency": "INR",
+        "unit": "10g",
+        "changeAmount": -3386,
+        "changePercentage": -3.4,
+        "previousClose": 99714,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      },
+      "silver": {
+        "metalType": "silver",
+        "metalName": "Fine Silver 999",
+        "purity": "99.9% Pure Silver (1kg Bar Spot)",
+        "price": 122482,
+        "currency": "INR",
+        "unit": "1kg",
+        "changeAmount": -6115,
+        "changePercentage": -4.76,
+        "previousClose": 128597,
+        "tradingDate": "2026-11-21T18:20:04.000Z",
+        "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates",
+        "isAvailable": true,
+        "updatedAt": "2026-11-21T18:20:04.000Z"
+      }
+    },
+    "provider": "GoldAPI.io (Live Spot Feed)",
+    "source": "International Spot Prices Converted to INR (FOREX) — Not Official IBJA Domestic Physical Rates"
+  }
+]

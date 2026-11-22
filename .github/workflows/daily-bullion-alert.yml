@@ -1,0 +1,58 @@
+name: Daily Bullion WhatsApp Broadcast (07:00 AM IST)
+
+on:
+  # Automated cron schedule: 01:30 UTC = 07:00 AM IST daily
+  schedule:
+    - cron: '30 1 * * *'
+
+  # Manual trigger with dispatch options from GitHub UI
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run only (preview formatted message without contacting Meta WhatsApp API)'
+        required: false
+        type: boolean
+        default: false
+      force:
+        description: 'Force send (bypass same-day deduplication check)'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: daily-bullion-broadcast
+  cancel-in-progress: false
+
+jobs:
+  broadcast:
+    name: Dispatch 7:00 AM IST WhatsApp Alert
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Execute Daily Bullion Notification Runner
+        env:
+          GOLDAPI_API_KEY: ${{ secrets.GOLDAPI_API_KEY }}
+          WHATSAPP_API_TOKEN: ${{ secrets.WHATSAPP_API_TOKEN }}
+          WHATSAPP_PHONE_NUMBER_ID: ${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}
+          WHATSAPP_RECIPIENT_PHONE: ${{ secrets.WHATSAPP_RECIPIENT_PHONE }}
+        run: |
+          FLAGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            FLAGS="$FLAGS --dry-run"
+          fi
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then
+            FLAGS="$FLAGS --force"
+          fi
+          npx tsx scripts/send-daily-alert.ts $FLAGS

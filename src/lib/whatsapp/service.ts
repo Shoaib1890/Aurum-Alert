@@ -1,0 +1,257 @@
+import { BullionOverview } from '@/types/bullion';
+import {
+  WhatsAppTextMessagePayload,
+  WhatsAppApiResponse,
+  WhatsAppApiErrorResponse,
+  DispatchLogEntry,
+} from './types';
+import { dispatchLogManager } from './dispatch-log';
+import { formatINR, formatChangeDelta, formatPercentage, formatISTDate } from '@/lib/utils/formatters';
+
+export class WhatsAppNotificationService {
+  /**
+   * Sanitizes phone number to standard E.164 without leading '+' or special chars
+   * e.g., "+91 98765-43210" -> "919876543210"
+   */
+  public cleanPhoneNumber(phone: string): string {
+    return phone.replace(/[^\d]/g, '');
+  }
+
+  /**
+   * Masks recipient phone for safe display and logging (e.g., "9198*****210")
+   */
+  public maskPhoneNumber(phone: string): string {
+    const cleaned = this.cleanPhoneNumber(phone);
+    if (cleaned.length < 8) return '********';
+    return `${cleaned.slice(0, 4)}*****${cleaned.slice(-3)}`;
+  }
+
+  /**
+   * Generates the formatted message body strictly according to requirements
+   */
+  public formatMessageBody(overview: BullionOverview): string {
+    const today = new Date();
+    const formattedDate = new Intl.DateTimeFormat('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(today);
+
+    const gold24k = overview.rates.gold_24k;
+    const gold22k = overview.rates.gold_22k;
+    const silver = overview.rates.silver;
+
+    const goldChangeStr = `${formatChangeDelta(gold24k.changeAmount)} (${formatPercentage(gold24k.changePercentage)})`;
+    const silverChangeStr = `${formatChangeDelta(silver.changeAmount)} (${formatPercentage(silver.changePercentage)})`;
+
+    return `Good Morning! ☀️
+
+🔔 *AURUM ALERT – DAILY BULLION UPDATE*
+
+📅 Date: ${formattedDate}
+
+🥇 *GOLD PRICES*
+• 24K Gold (10g): ${formatINR(gold24k.price)}
+• 22K Gold (10g): ${formatINR(gold22k.price)}
+
+🥈 *SILVER PRICES*
+• Silver (1kg): ${formatINR(silver.price)}
+
+📊 *DAILY MARKET MOVEMENT*
+• Gold: ${goldChangeStr}
+• Silver: ${silverChangeStr}
+
+📌 Source: GoldAPI.io
+International Spot Prices converted to INR.
+These are not official IBJA domestic retail rates.
+
+Have a great day!`;
+  }
+
+  /**
+   * Gets current date key in IST (YYYY-MM-DD)
+   */
+  public getTodayISTDateKey(): string {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    return formatter.format(new Date());
+  }
+
+  /**
+   * Sends the automated WhatsApp message via Meta WhatsApp Cloud API
+   */
+  public async sendDailyAlert(
+    overview: BullionOverview,
+    options: { force?: boolean; dryRun?: boolean } = {}
+  ): Promise<{
+    success: boolean;
+    status: 'sent' | 'skipped_duplicate' | 'failed' | 'dry_run';
+    messageId?: string;
+    error?: string;
+    preview?: string;
+  }> {
+    const apiToken = process.env.WHATSAPP_API_TOKEN;
+    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+    const recipientPhoneRaw = process.env.WHATSAPP_RECIPIENT_PHONE;
+
+    if (!overview.hasData) {
+      return {
+        success: false,
+        status: 'failed',
+        error: 'Cannot dispatch WhatsApp alert: Bullion price data is missing or unavailable.',
+      };
+    }
+
+    const messageBody = this.formatMessageBody(overview);
+
+    if (options.dryRun) {
+      console.log('[WhatsApp Notification] DRY RUN ONLY — Message was not sent:');
+      console.log(messageBody);
+      return {
+        success: true,
+        status: 'dry_run',
+        preview: messageBody,
+      };
+    }
+
+    if (!apiToken || !phoneNumberId || !recipientPhoneRaw) {
+      return {
+        success: false,
+        status: 'failed',
+        error:
+          'Missing Meta WhatsApp credentials. Ensure WHATSAPP_API_TOKEN, WHATSAPP_PHONE_NUMBER_ID, and WHATSAPP_RECIPIENT_PHONE are configured.',
+      };
+    }
+
+    const recipientPhone = this.cleanPhoneNumber(recipientPhoneRaw);
+    const maskedPhone = this.maskPhoneNumber(recipientPhone);
+    const todayKey = this.getTodayISTDateKey();
+
+    // 1. Prevent duplicate sends for the same date unless force is specified
+    if (!options.force && dispatchLogManager.hasDispatchedForDate(todayKey)) {
+      const logEntry: DispatchLogEntry = {
+        id: `skip_${Date.now()}`,
+        dateKey: todayKey,
+        dispatchedAt: new Date().toISOString(),
+        recipientMasked: maskedPhone,
+        status: 'skipped_duplicate',
+        pricesSummary: {
+          gold24k: overview.rates.gold_24k.price,
+          gold22k: overview.rates.gold_22k.price,
+          silver: overview.rates.silver.price,
+        },
+      };
+      dispatchLogManager.saveLog(logEntry);
+
+      return {
+        success: true,
+        status: 'skipped_duplicate',
+        error: `An alert has already been successfully sent for today (${todayKey}). Use force=true to override.`,
+        preview: messageBody,
+      };
+    }
+
+    // 2. Build Meta Cloud API request payload
+    const payload: WhatsAppTextMessagePayload = {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to: recipientPhone,
+      type: 'text',
+      text: {
+        preview_url: false,
+        body: messageBody,
+      },
+    };
+
+    const endpoint = `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        let metaErrorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        try {
+          const errData = (await response.json()) as WhatsAppApiErrorResponse;
+          if (errData.error?.message) {
+            metaErrorMessage = `Meta API Error (${errData.error.code}): ${errData.error.message}`;
+            if (errData.error.error_data?.details) {
+              metaErrorMessage += ` - ${errData.error.error_data.details}`;
+            }
+          }
+        } catch {
+          // Response body was not JSON
+        }
+
+        const failedLog: DispatchLogEntry = {
+          id: `fail_${Date.now()}`,
+          dateKey: todayKey,
+          dispatchedAt: new Date().toISOString(),
+          recipientMasked: maskedPhone,
+          status: 'failed',
+          errorMessage: metaErrorMessage,
+          pricesSummary: {
+            gold24k: overview.rates.gold_24k.price,
+            gold22k: overview.rates.gold_22k.price,
+            silver: overview.rates.silver.price,
+          },
+        };
+        dispatchLogManager.saveLog(failedLog);
+
+        return {
+          success: false,
+          status: 'failed',
+          error: metaErrorMessage,
+          preview: messageBody,
+        };
+      }
+
+      const resData = (await response.json()) as WhatsAppApiResponse;
+      const messageId = resData.messages?.[0]?.id || 'unknown';
+
+      // 3. Save successful dispatch log
+      const successLog: DispatchLogEntry = {
+        id: `sent_${Date.now()}`,
+        dateKey: todayKey,
+        dispatchedAt: new Date().toISOString(),
+        recipientMasked: maskedPhone,
+        status: 'sent',
+        messageId,
+        pricesSummary: {
+          gold24k: overview.rates.gold_24k.price,
+          gold22k: overview.rates.gold_22k.price,
+          silver: overview.rates.silver.price,
+        },
+      };
+      dispatchLogManager.saveLog(successLog);
+
+      return {
+        success: true,
+        status: 'sent',
+        messageId,
+        preview: messageBody,
+      };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unknown network error';
+      return {
+        success: false,
+        status: 'failed',
+        error: `Failed to contact Meta WhatsApp Cloud API: ${msg}`,
+        preview: messageBody,
+      };
+    }
+  }
+}
+
+export const whatsAppService = new WhatsAppNotificationService();
