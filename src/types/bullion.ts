@@ -61,8 +61,8 @@ export interface SyncStatus {
 export interface NotificationScheduleConfig {
   scheduledTimeIST: string;
   cronExpression: string;
-  recipientPhoneMasked: string;
-  provider: 'whatsapp_cloud_api' | 'twilio' | 'none';
+  recipientMasked: string;
+  provider: 'telegram_bot' | 'none';
   status: 'configured' | 'pending_credentials' | 'disabled';
   lastDispatchStatus: 'sent' | 'failed' | 'never';
   lastDispatchedAt: string | null;

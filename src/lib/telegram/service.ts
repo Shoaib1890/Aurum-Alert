@@ -1,33 +1,24 @@
 import { BullionOverview } from '@/types/bullion';
 import {
-  WhatsAppTextMessagePayload,
-  WhatsAppApiResponse,
-  WhatsAppApiErrorResponse,
+  TelegramSendMessagePayload,
+  TelegramApiResponse,
   DispatchLogEntry,
 } from './types';
 import { dispatchLogManager } from './dispatch-log';
-import { formatINR, formatChangeDelta, formatPercentage, formatISTDate } from '@/lib/utils/formatters';
+import { formatINR, formatChangeDelta, formatPercentage } from '@/lib/utils/formatters';
 
-export class WhatsAppNotificationService {
+export class TelegramNotificationService {
   /**
-   * Sanitizes phone number to standard E.164 without leading '+' or special chars
-   * e.g., "+91 98765-43210" -> "919876543210"
+   * Masks chat ID for safe logging and display (e.g., "1234****89")
    */
-  public cleanPhoneNumber(phone: string): string {
-    return phone.replace(/[^\d]/g, '');
+  public maskChatId(chatId: string): string {
+    const trimmed = chatId.trim();
+    if (trimmed.length <= 4) return '****';
+    return `${trimmed.slice(0, 3)}****${trimmed.slice(-3)}`;
   }
 
   /**
-   * Masks recipient phone for safe display and logging (e.g., "9198*****210")
-   */
-  public maskPhoneNumber(phone: string): string {
-    const cleaned = this.cleanPhoneNumber(phone);
-    if (cleaned.length < 8) return '********';
-    return `${cleaned.slice(0, 4)}*****${cleaned.slice(-3)}`;
-  }
-
-  /**
-   * Generates the formatted message body strictly according to requirements
+   * Generates the formatted message body strictly according to Aurum Alert standard
    */
   public formatMessageBody(overview: BullionOverview): string {
     const today = new Date();
@@ -83,7 +74,7 @@ Have a great day!`;
   }
 
   /**
-   * Sends the automated WhatsApp message via Meta WhatsApp Cloud API
+   * Sends the automated message via Telegram Bot API sendMessage endpoint
    */
   public async sendDailyAlert(
     overview: BullionOverview,
@@ -95,22 +86,21 @@ Have a great day!`;
     error?: string;
     preview?: string;
   }> {
-    const apiToken = process.env.WHATSAPP_API_TOKEN;
-    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
-    const recipientPhoneRaw = process.env.WHATSAPP_RECIPIENT_PHONE;
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
 
     if (!overview.hasData) {
       return {
         success: false,
         status: 'failed',
-        error: 'Cannot dispatch WhatsApp alert: Bullion price data is missing or unavailable.',
+        error: 'Cannot dispatch Telegram alert: Bullion price data is missing or unavailable.',
       };
     }
 
     const messageBody = this.formatMessageBody(overview);
 
     if (options.dryRun) {
-      console.log('[WhatsApp Notification] DRY RUN ONLY — Message was not sent:');
+      console.log('[Telegram Notification] DRY RUN ONLY — Message was not sent:');
       console.log(messageBody);
       return {
         success: true,
@@ -119,17 +109,16 @@ Have a great day!`;
       };
     }
 
-    if (!apiToken || !phoneNumberId || !recipientPhoneRaw) {
+    if (!botToken || !chatId) {
       return {
         success: false,
         status: 'failed',
         error:
-          'Missing Meta WhatsApp credentials. Ensure WHATSAPP_API_TOKEN, WHATSAPP_PHONE_NUMBER_ID, and WHATSAPP_RECIPIENT_PHONE are configured.',
+          'Missing Telegram credentials. Ensure TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are configured in environment variables.',
       };
     }
 
-    const recipientPhone = this.cleanPhoneNumber(recipientPhoneRaw);
-    const maskedPhone = this.maskPhoneNumber(recipientPhone);
+    const maskedChat = this.maskChatId(chatId);
     const todayKey = this.getTodayISTDateKey();
 
     // 1. Prevent duplicate sends for the same date unless force is specified
@@ -138,7 +127,8 @@ Have a great day!`;
         id: `skip_${Date.now()}`,
         dateKey: todayKey,
         dispatchedAt: new Date().toISOString(),
-        recipientMasked: maskedPhone,
+        channel: 'telegram',
+        recipientMasked: maskedChat,
         status: 'skipped_duplicate',
         pricesSummary: {
           gold24k: overview.rates.gold_24k.price,
@@ -156,39 +146,31 @@ Have a great day!`;
       };
     }
 
-    // 2. Build Meta Cloud API request payload
-    const payload: WhatsAppTextMessagePayload = {
-      messaging_product: 'whatsapp',
-      recipient_type: 'individual',
-      to: recipientPhone,
-      type: 'text',
-      text: {
-        preview_url: false,
-        body: messageBody,
-      },
+    // 2. Build Telegram Bot API request payload
+    const payload: TelegramSendMessagePayload = {
+      chat_id: chatId.trim(),
+      text: messageBody,
+      parse_mode: 'Markdown',
+      disable_web_page_preview: true,
     };
 
-    const endpoint = `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`;
+    const endpoint = `https://api.telegram.org/bot${botToken.trim()}/sendMessage`;
 
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${apiToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        let metaErrorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        let telegramError = `HTTP ${response.status}: ${response.statusText}`;
         try {
-          const errData = (await response.json()) as WhatsAppApiErrorResponse;
-          if (errData.error?.message) {
-            metaErrorMessage = `Meta API Error (${errData.error.code}): ${errData.error.message}`;
-            if (errData.error.error_data?.details) {
-              metaErrorMessage += ` - ${errData.error.error_data.details}`;
-            }
+          const errData = (await response.json()) as TelegramApiResponse;
+          if (errData.description) {
+            telegramError = `Telegram API Error (${errData.error_code ?? response.status}): ${errData.description}`;
           }
         } catch {
           // Response body was not JSON
@@ -198,9 +180,10 @@ Have a great day!`;
           id: `fail_${Date.now()}`,
           dateKey: todayKey,
           dispatchedAt: new Date().toISOString(),
-          recipientMasked: maskedPhone,
+          channel: 'telegram',
+          recipientMasked: maskedChat,
           status: 'failed',
-          errorMessage: metaErrorMessage,
+          errorMessage: telegramError,
           pricesSummary: {
             gold24k: overview.rates.gold_24k.price,
             gold22k: overview.rates.gold_22k.price,
@@ -212,20 +195,21 @@ Have a great day!`;
         return {
           success: false,
           status: 'failed',
-          error: metaErrorMessage,
+          error: telegramError,
           preview: messageBody,
         };
       }
 
-      const resData = (await response.json()) as WhatsAppApiResponse;
-      const messageId = resData.messages?.[0]?.id || 'unknown';
+      const resData = (await response.json()) as TelegramApiResponse;
+      const messageId = String(resData.result?.message_id || 'unknown');
 
       // 3. Save successful dispatch log
       const successLog: DispatchLogEntry = {
         id: `sent_${Date.now()}`,
         dateKey: todayKey,
         dispatchedAt: new Date().toISOString(),
-        recipientMasked: maskedPhone,
+        channel: 'telegram',
+        recipientMasked: maskedChat,
         status: 'sent',
         messageId,
         pricesSummary: {
@@ -247,11 +231,11 @@ Have a great day!`;
       return {
         success: false,
         status: 'failed',
-        error: `Failed to contact Meta WhatsApp Cloud API: ${msg}`,
+        error: `Failed to contact Telegram Bot API: ${msg}`,
         preview: messageBody,
       };
     }
   }
 }
 
-export const whatsAppService = new WhatsAppNotificationService();
+export const telegramService = new TelegramNotificationService();

@@ -15,21 +15,21 @@ export const METAL_CONFIG: Record<
     purity: '99.9% Pure',
     unit: '10g',
     unitLabel: 'per 10 grams',
-    description: 'National standard benchmark pure gold rate (ex-GST, ex-making).',
+    description: 'International wholesale spot pure gold rate in INR (ex-customs, ex-GST).',
   },
   gold_22k: {
     name: '22 Karat Standard Gold',
     purity: '91.6% Pure (Jewellery Grade)',
     unit: '10g',
     unitLabel: 'per 10 grams',
-    description: 'National hallmark jewellery standard rate (ex-GST, ex-making).',
+    description: 'International wholesale spot standard gold rate in INR (ex-customs, ex-GST).',
   },
   silver: {
     name: 'Fine Silver 999',
     purity: '99.9% Pure',
     unit: '1kg',
     unitLabel: 'per 1 kilogram',
-    description: 'National benchmark bullion silver bar rate (ex-GST).',
+    description: 'International wholesale spot bullion silver rate in INR (ex-customs, ex-GST).',
   },
 };
 
@@ -45,7 +45,7 @@ export const INITIAL_EMPTY_RATES: Record<MetalType, BullionRate> = {
     changePercentage: null,
     previousClose: null,
     tradingDate: null,
-    source: 'National Benchmark (IBJA/MCX)',
+    source: 'GoldAPI.io',
     isAvailable: false,
   },
   gold_22k: {
@@ -59,7 +59,7 @@ export const INITIAL_EMPTY_RATES: Record<MetalType, BullionRate> = {
     changePercentage: null,
     previousClose: null,
     tradingDate: null,
-    source: 'National Benchmark (IBJA/MCX)',
+    source: 'GoldAPI.io',
     isAvailable: false,
   },
   silver: {
@@ -73,7 +73,7 @@ export const INITIAL_EMPTY_RATES: Record<MetalType, BullionRate> = {
     changePercentage: null,
     previousClose: null,
     tradingDate: null,
-    source: 'National Benchmark (IBJA/MCX)',
+    source: 'GoldAPI.io',
     isAvailable: false,
   },
 };
@@ -81,8 +81,8 @@ export const INITIAL_EMPTY_RATES: Record<MetalType, BullionRate> = {
 export const DEFAULT_NOTIFICATION_CONFIG: NotificationScheduleConfig = {
   scheduledTimeIST: '07:00 AM IST',
   cronExpression: '30 1 * * *', // 01:30 UTC = 07:00 IST
-  recipientPhoneMasked: '+91 98*** ***10',
-  provider: 'whatsapp_cloud_api',
+  recipientMasked: 'Telegram Bot Chat',
+  provider: 'telegram_bot',
   status: 'pending_credentials',
   lastDispatchStatus: 'never',
   lastDispatchedAt: null,

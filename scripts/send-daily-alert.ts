@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { goldApiProvider } from '../src/lib/bullion/providers/goldapi';
-import { whatsAppService } from '../src/lib/whatsapp/service';
+import { telegramService } from '../src/lib/telegram/service';
 
 // In local execution, load .env.local if present
 const envPath = path.join(process.cwd(), '.env.local');
@@ -20,7 +20,7 @@ if (fs.existsSync(envPath)) {
 
 async function main() {
   console.log('====================================================');
-  console.log('AURUM ALERT — 7:00 AM IST DAILY DISPATCH RUNNER');
+  console.log('AURUM ALERT — 7:00 AM IST TELEGRAM DISPATCH RUNNER');
   console.log('====================================================');
   console.log(`Execution Time: ${new Date().toISOString()} (UTC)`);
 
@@ -49,34 +49,32 @@ async function main() {
   console.log(`  • 22K Gold (10g): ₹${overview.rates.gold_22k.price?.toLocaleString('en-IN')}`);
   console.log(`  • Silver (1kg): ₹${overview.rates.silver.price?.toLocaleString('en-IN')}`);
 
-  // Step 2: Validate Meta credentials unless in dry-run
+  // Step 2: Validate Telegram credentials unless in dry-run
   if (!isDryRun) {
-    console.log('\n[2/3] Checking Meta WhatsApp Cloud API credentials...');
-    const hasToken = Boolean(process.env.WHATSAPP_API_TOKEN);
-    const hasPhoneId = Boolean(process.env.WHATSAPP_PHONE_NUMBER_ID);
-    const hasRecipient = Boolean(process.env.WHATSAPP_RECIPIENT_PHONE);
+    console.log('\n[2/3] Checking Telegram Bot API credentials...');
+    const hasToken = Boolean(process.env.TELEGRAM_BOT_TOKEN);
+    const hasChatId = Boolean(process.env.TELEGRAM_CHAT_ID);
 
-    if (!hasToken || !hasPhoneId || !hasRecipient) {
-      console.error('❌ Meta WhatsApp credentials missing:');
-      if (!hasToken) console.error('  - WHATSAPP_API_TOKEN is not set');
-      if (!hasPhoneId) console.error('  - WHATSAPP_PHONE_NUMBER_ID is not set');
-      if (!hasRecipient) console.error('  - WHATSAPP_RECIPIENT_PHONE is not set');
+    if (!hasToken || !hasChatId) {
+      console.error('❌ Telegram credentials missing:');
+      if (!hasToken) console.error('  - TELEGRAM_BOT_TOKEN is not set');
+      if (!hasChatId) console.error('  - TELEGRAM_CHAT_ID is not set');
       process.exit(1);
     }
 
-    const maskedPhone = whatsAppService.maskPhoneNumber(process.env.WHATSAPP_RECIPIENT_PHONE!);
-    console.log(`✓ Meta credentials detected. Target recipient: ${maskedPhone}`);
+    const maskedChat = telegramService.maskChatId(process.env.TELEGRAM_CHAT_ID!);
+    console.log(`✓ Telegram credentials detected. Target Chat ID: ${maskedChat}`);
   }
 
   // Step 3: Dispatch message
-  console.log('\n[3/3] Executing WhatsApp notification dispatch...');
-  const result = await whatsAppService.sendDailyAlert(overview, {
+  console.log('\n[3/3] Executing Telegram notification dispatch...');
+  const result = await telegramService.sendDailyAlert(overview, {
     force: isForce,
     dryRun: isDryRun,
   });
 
   if (result.status === 'dry_run') {
-    console.log('\n✅ Dry run complete. Formatted WhatsApp Message Preview:');
+    console.log('\n✅ Dry run complete. Formatted Telegram Message Preview:');
     console.log('----------------------------------------------------');
     console.log(result.preview);
     console.log('----------------------------------------------------');
@@ -90,13 +88,13 @@ async function main() {
   }
 
   if (!result.success) {
-    console.error('\n❌ WhatsApp dispatch failed:');
+    console.error('\n❌ Telegram dispatch failed:');
     console.error(`Error: ${result.error}`);
     process.exit(1);
   }
 
-  console.log('\n✅ WhatsApp notification successfully dispatched!');
-  console.log(`Message SID: ${result.messageId}`);
+  console.log('\n✅ Telegram notification successfully dispatched!');
+  console.log(`Message ID: ${result.messageId}`);
 }
 
 main().catch((err) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, Clock, Smartphone, ShieldCheck, CloudLightning, GitBranch } from 'lucide-react';
+import { Send, Clock, MessageSquare, ShieldCheck, GitBranch } from 'lucide-react';
 import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { ManualTriggerButton } from './ManualTriggerButton';
@@ -14,26 +14,26 @@ export function NotificationSettings({ config }: NotificationSettingsProps) {
     <Card className="border-slate-200">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center shrink-0">
-            <Bell className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200 text-sky-600 flex items-center justify-center shrink-0">
+            <Send className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold text-slate-900">
-                Automated 7:00 AM IST WhatsApp Dispatch
+                Automated 7:00 AM IST Telegram Dispatch
               </h3>
-              <Badge variant="emerald" size="sm" dot>
+              <Badge variant="blue" size="sm" dot>
                 Daily at 07:00 AM IST
               </Badge>
             </div>
             <p className="text-xs text-slate-500">
-              Powered by GitHub Actions cloud cron. Operates 24/7 without requiring your personal computer to be online.
+              Powered by Telegram Bot API and GitHub Actions cloud cron. Zero local dependencies.
             </p>
           </div>
         </div>
 
         <Badge variant="emerald" size="sm">
-          Phase 3 Active
+          Telegram Active
         </Badge>
       </CardHeader>
 
@@ -43,7 +43,7 @@ export function NotificationSettings({ config }: NotificationSettingsProps) {
           {/* Schedule card */}
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 mb-1">
-              <Clock className="w-4 h-4 text-emerald-600" />
+              <Clock className="w-4 h-4 text-sky-600" />
               <span>Schedule Frequency</span>
             </div>
             <div className="text-lg font-bold text-slate-900 font-mono">
@@ -57,14 +57,14 @@ export function NotificationSettings({ config }: NotificationSettingsProps) {
           {/* Delivery Target */}
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 mb-1">
-              <Smartphone className="w-4 h-4 text-emerald-600" />
-              <span>Target WhatsApp</span>
+              <MessageSquare className="w-4 h-4 text-sky-600" />
+              <span>Target Telegram Chat</span>
             </div>
             <div className="text-lg font-bold text-slate-900 font-mono">
-              {process.env.NEXT_PUBLIC_RECIPIENT_MASKED || '+91 98*** ***10'}
+              {process.env.NEXT_PUBLIC_CHAT_ID_MASKED || 'Configured via Bot'}
             </div>
             <p className="text-[11px] text-slate-500 mt-0.5">
-              Configured via WHATSAPP_RECIPIENT_PHONE
+              Set via TELEGRAM_CHAT_ID
             </p>
           </div>
 
@@ -86,12 +86,12 @@ export function NotificationSettings({ config }: NotificationSettingsProps) {
         {/* Message Template Preview Box */}
         <div className="rounded-xl border border-slate-200 bg-slate-900 text-slate-100 p-5 font-mono text-xs shadow-inner">
           <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-800 text-slate-400 text-[11px]">
-            <span className="flex items-center gap-1.5 font-sans font-semibold text-emerald-400">
+            <span className="flex items-center gap-1.5 font-sans font-semibold text-sky-400">
               <ShieldCheck className="w-4 h-4" />
-              Official WhatsApp Message Format (Dispatched at 07:00 AM IST)
+              Official Telegram Message Format (Dispatched at 07:00 AM IST)
             </span>
             <span className="bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[10px]">
-              Meta Cloud API
+              Telegram Bot API
             </span>
           </div>
           <div className="space-y-1.5 text-slate-300 leading-relaxed">
@@ -128,7 +128,7 @@ export function NotificationSettings({ config }: NotificationSettingsProps) {
               Manual Notification Test Dispatch
             </h4>
             <p className="text-xs text-slate-500">
-              Trigger a test WhatsApp message to verify Meta API connectivity and delivery to your personal phone.
+              Trigger a test message via Telegram Bot API to verify bot delivery to your personal Telegram chat.
             </p>
           </div>
 

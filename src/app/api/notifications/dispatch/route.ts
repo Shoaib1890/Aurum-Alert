@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { goldApiProvider } from '@/lib/bullion/providers/goldapi';
-import { whatsAppService } from '@/lib/whatsapp/service';
+import { telegramService } from '@/lib/telegram/service';
 
 /**
  * POST /api/notifications/dispatch
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await whatsAppService.sendDailyAlert(overview, { force: false });
+    const result = await telegramService.sendDailyAlert(overview, { force: false });
 
     return NextResponse.json(result);
   } catch (error: unknown) {

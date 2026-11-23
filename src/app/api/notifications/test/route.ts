@@ -1,23 +1,22 @@
 import { NextResponse } from 'next/server';
 import { goldApiProvider } from '@/lib/bullion/providers/goldapi';
-import { whatsAppService } from '@/lib/whatsapp/service';
+import { telegramService } from '@/lib/telegram/service';
 
 /**
  * POST /api/notifications/test
- * Dispatches a real test WhatsApp message using configured server credentials
+ * Dispatches a real test Telegram message using configured server credentials
  */
 export async function POST() {
   try {
-    const hasToken = Boolean(process.env.WHATSAPP_API_TOKEN);
-    const hasPhoneId = Boolean(process.env.WHATSAPP_PHONE_NUMBER_ID);
-    const hasRecipient = Boolean(process.env.WHATSAPP_RECIPIENT_PHONE);
+    const hasToken = Boolean(process.env.TELEGRAM_BOT_TOKEN);
+    const hasChatId = Boolean(process.env.TELEGRAM_CHAT_ID);
 
-    if (!hasToken || !hasPhoneId || !hasRecipient) {
+    if (!hasToken || !hasChatId) {
       return NextResponse.json(
         {
           success: false,
           error:
-            'WhatsApp credentials incomplete in .env.local. Required: WHATSAPP_API_TOKEN, WHATSAPP_PHONE_NUMBER_ID, and WHATSAPP_RECIPIENT_PHONE.',
+            'Telegram credentials incomplete in .env.local. Required: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.',
           code: 'CREDENTIALS_MISSING',
         },
         { status: 400 }
@@ -37,7 +36,7 @@ export async function POST() {
     }
 
     // Force send test alert (bypasses date deduplication for testing)
-    const result = await whatsAppService.sendDailyAlert(overview, { force: true });
+    const result = await telegramService.sendDailyAlert(overview, { force: true });
 
     if (!result.success) {
       return NextResponse.json(
@@ -53,7 +52,7 @@ export async function POST() {
     return NextResponse.json({
       success: true,
       messageId: result.messageId,
-      recipient: whatsAppService.maskPhoneNumber(process.env.WHATSAPP_RECIPIENT_PHONE!),
+      recipient: telegramService.maskChatId(process.env.TELEGRAM_CHAT_ID!),
       dispatchedAt: new Date().toISOString(),
       preview: result.preview,
     });

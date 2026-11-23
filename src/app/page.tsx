@@ -110,7 +110,7 @@ export default function DashboardPage() {
         <HistoricalChart />
       </section>
 
-      {/* 5. WhatsApp Notification Settings & Schedule */}
+      {/* 5. Telegram Notification Settings & Schedule */}
       <section>
         <NotificationSettings config={DEFAULT_NOTIFICATION_CONFIG} />
       </section>

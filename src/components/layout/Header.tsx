@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Coins, Bell, RefreshCw, ShieldCheck } from 'lucide-react';
+import { Coins, Send, Bell } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 
 export function Header() {
@@ -40,7 +40,7 @@ export function Header() {
                   Daily Bullion Alert
                 </h1>
                 <Badge variant="emerald" size="sm">
-                  India Benchmark
+                  Spot INR
                 </Badge>
               </div>
               <p className="text-xs text-slate-500 font-medium">
@@ -62,9 +62,9 @@ export function Header() {
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="hidden sm:flex items-center gap-1 text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">
-                <Bell className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Morning WhatsApp Engine</span>
+              <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">
+                <Send className="w-3.5 h-3.5 text-sky-600" />
+                <span>Morning Telegram Engine</span>
               </div>
             </div>
           </div>

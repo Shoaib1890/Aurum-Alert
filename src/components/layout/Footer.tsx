@@ -9,10 +9,10 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 text-slate-800 font-semibold mb-2">
               <Shield className="w-4 h-4 text-emerald-600" />
-              <span>National Benchmark Architecture</span>
+              <span>Bullion Spot Architecture</span>
             </div>
             <p className="text-slate-500 leading-relaxed">
-              Daily Bullion Alert is engineered to track official India-wide wholesale benchmark spot rates (ex-GST, ex-making). Automated morning dispatch operates independently via cloud serverless functions at 7:00 AM IST.
+              Daily Bullion Alert tracks wholesale bullion spot rates converted to INR. Automated morning dispatch operates independently via GitHub Actions cloud cron at 7:00 AM IST to Telegram.
             </p>
           </div>
 
@@ -22,16 +22,16 @@ export function Footer() {
               <span>Data Integrity & Standards</span>
             </div>
             <p className="text-slate-500 leading-relaxed">
-              All prices represent pure 24K (999), 22K (916 jewellery hallmark standard) per 10 grams and Fine Silver (999) per 1 kilogram. No unverified mock prices are ever presented as real market transactions.
+              All prices represent pure 24K (999), 22K (916 jewellery hallmark standard) per 10 grams and Fine Silver (999) per 1 kilogram. Excludes Indian customs duty, GST (3%), and retail making charges.
             </p>
           </div>
 
           <div>
             <div className="text-slate-800 font-semibold mb-2">
-              Phase Status & Deployment
+              Automation Status
             </div>
             <p className="text-slate-500 leading-relaxed">
-              <strong>Phase 1:</strong> Project scaffolding & production dashboard UI. Database and WhatsApp delivery pipeline will be connected in Phase 2 upon user approval.
+              <strong>Telegram Bot Integration:</strong> Daily alerts sent directly to your personal Telegram chat every morning at 7:00 AM IST with zero local computer dependency.
             </p>
           </div>
         </div>

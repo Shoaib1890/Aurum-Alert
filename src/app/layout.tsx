@@ -11,9 +11,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Daily Bullion Alert | India Benchmark Gold & Silver Rates',
+  title: 'Daily Bullion Alert | Gold & Silver Spot Rates',
   description:
-    'Track daily India benchmark spot gold and silver prices with automated morning WhatsApp alerts scheduled for 7:00 AM IST.',
+    'Track daily India gold and silver spot prices with automated morning Telegram alerts scheduled for 7:00 AM IST.',
 };
 
 export default function RootLayout({

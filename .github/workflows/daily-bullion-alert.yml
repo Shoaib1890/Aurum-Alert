@@ -1,4 +1,4 @@
-name: Daily Bullion WhatsApp Broadcast (07:00 AM IST)
+name: Daily Bullion Telegram Broadcast (07:00 AM IST)
 
 on:
   # Automated cron schedule: 01:30 UTC = 07:00 AM IST daily
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'Dry run only (preview formatted message without contacting Meta WhatsApp API)'
+        description: 'Dry run only (preview formatted message without contacting Telegram Bot API)'
         required: false
         type: boolean
         default: false
@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   broadcast:
-    name: Dispatch 7:00 AM IST WhatsApp Alert
+    name: Dispatch 7:00 AM IST Telegram Alert
     runs-on: ubuntu-latest
 
     steps:
@@ -44,9 +44,8 @@ jobs:
       - name: Execute Daily Bullion Notification Runner
         env:
           GOLDAPI_API_KEY: ${{ secrets.GOLDAPI_API_KEY }}
-          WHATSAPP_API_TOKEN: ${{ secrets.WHATSAPP_API_TOKEN }}
-          WHATSAPP_PHONE_NUMBER_ID: ${{ secrets.WHATSAPP_PHONE_NUMBER_ID }}
-          WHATSAPP_RECIPIENT_PHONE: ${{ secrets.WHATSAPP_RECIPIENT_PHONE }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           FLAGS=""
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then

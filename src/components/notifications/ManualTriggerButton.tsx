@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Send, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Send, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export function ManualTriggerButton() {
@@ -24,12 +24,12 @@ export function ManualTriggerButton() {
       if (data.success) {
         setFeedback({
           type: 'success',
-          message: `Test alert sent successfully to ${data.recipient}!`,
+          message: `Test alert sent successfully to Telegram chat ${data.recipient}!`,
         });
       } else {
         setFeedback({
           type: 'error',
-          message: data.error || 'Failed to send WhatsApp alert.',
+          message: data.error || 'Failed to send Telegram alert.',
         });
       }
     } catch (err: unknown) {
@@ -52,10 +52,10 @@ export function ManualTriggerButton() {
           onClick={handleTestDispatch}
           isLoading={isLoading}
           disabled={isLoading}
-          className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-xs"
+          className="gap-2 bg-sky-600 hover:bg-sky-700 text-xs"
         >
           <Send className="w-3.5 h-3.5" />
-          <span>Send Test WhatsApp Alert</span>
+          <span>Send Test Telegram Alert</span>
         </Button>
       </div>
 

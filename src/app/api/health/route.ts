@@ -6,17 +6,17 @@ export async function GET() {
       !process.env.GOLDAPI_API_KEY.includes('your-key-here')
   );
 
+  const isTelegramConfigured = Boolean(
+    process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID
+  );
+
   const isSupabaseConfigured = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
   );
 
-  const isWhatsAppConfigured = Boolean(
-    process.env.WHATSAPP_API_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID
-  );
-
   return NextResponse.json({
     status: 'ok',
-    phase: '2A',
+    phase: '3-telegram',
     app: 'Daily Bullion Alert',
     timezone: 'Asia/Kolkata (IST)',
     scheduledAlertTime: '07:00 AM IST',
@@ -24,7 +24,7 @@ export async function GET() {
       goldApi: isGoldApiConfigured ? 'configured' : 'unconfigured (Set GOLDAPI_API_KEY in .env.local)',
       storage: 'local_file (.data/bullion_snapshots.json)',
       supabase: isSupabaseConfigured ? 'configured' : 'deferred (free tier optional)',
-      whatsapp: isWhatsAppConfigured ? 'configured' : 'unconfigured (Phase 3)',
+      telegram: isTelegramConfigured ? 'configured' : 'unconfigured (Set TELEGRAM_BOT_TOKEN & TELEGRAM_CHAT_ID)',
     },
     timestamp: new Date().toISOString(),
   });
