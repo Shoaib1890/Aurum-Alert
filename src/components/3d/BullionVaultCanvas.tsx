@@ -35,8 +35,9 @@ export function BullionVaultCanvas({
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x06070a, 0.05);
 
-    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-    camera.position.set(0, 1.8, 4.2);
+    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
+    camera.position.set(0, 0.35, 4.2);
+    camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -132,8 +133,8 @@ export function BullionVaultCanvas({
 
     // 3. Trapezoidal Cast Ingot Geometry
     const shape = new THREE.Shape();
-    const l = 1.4;
-    const w = 0.8;
+    const l = 1.35;
+    const w = 0.75;
     const r = 0.08;
     shape.moveTo(-l + r, -w);
     shape.lineTo(l - r, -w);
@@ -146,12 +147,12 @@ export function BullionVaultCanvas({
     shape.quadraticCurveTo(-l, -w, -l + r, -w);
 
     const extrudeSettings: THREE.ExtrudeGeometryOptions = {
-      depth: 0.55,
+      depth: 0.5,
       bevelEnabled: true,
       bevelSegments: 6,
       steps: 2,
-      bevelSize: 0.08,
-      bevelThickness: 0.08,
+      bevelSize: 0.07,
+      bevelThickness: 0.07,
     };
 
     const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
@@ -196,8 +197,9 @@ export function BullionVaultCanvas({
     });
 
     const ingotMesh = new THREE.Mesh(geometry, material);
-    ingotMesh.rotation.x = -Math.PI / 4.5;
+    ingotMesh.rotation.x = -Math.PI / 5;
     ingotMesh.rotation.y = Math.PI / 6;
+    ingotMesh.position.set(0, 0, 0);
     scene.add(ingotMesh);
 
     // 5. Floating Dust / Atmospheric Particles
@@ -302,8 +304,8 @@ export function BullionVaultCanvas({
 
       // Gentle auto-rotation when not user-dragging
       if (isRotating && !isDragging) {
-        ingotMesh.rotation.y += 0.006;
-        ingotMesh.position.y = Math.sin(elapsedTime * 1.4) * 0.08;
+        ingotMesh.rotation.y += 0.005;
+        ingotMesh.position.y = Math.sin(elapsedTime * 1.2) * 0.04;
       }
 
       // Rotate particle aura
@@ -322,6 +324,7 @@ export function BullionVaultCanvas({
       const newH = currentMount.clientHeight;
       camera.aspect = newW / newH;
       camera.updateProjectionMatrix();
+      camera.lookAt(0, 0, 0);
       renderer.setSize(newW, newH);
     };
     window.addEventListener('resize', handleResize);
@@ -377,7 +380,7 @@ export function BullionVaultCanvas({
       </div>
 
       {/* Three.js Canvas Container */}
-      <div className="w-full h-64 sm:h-72 cursor-grab active:cursor-grabbing relative flex items-center justify-center">
+      <div className="w-full h-72 sm:h-80 cursor-grab active:cursor-grabbing relative flex items-center justify-center">
         {/* Dedicated WebGL canvas mount container that has ZERO React children */}
         <div ref={mountRef} className="w-full h-full absolute inset-0 overflow-hidden" />
 
