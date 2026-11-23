@@ -14,21 +14,21 @@ export function PriceOverview({ rates }: PriceOverviewProps) {
       <PriceCard
         rate={rates.gold_24k}
         accentColor="gold"
-        icon={<Coins className="w-6 h-6 text-amber-500" />}
+        icon={<Coins className="w-6 h-6 text-amber-400" />}
       />
 
       {/* 22K Gold Card */}
       <PriceCard
         rate={rates.gold_22k}
-        accentColor="gold"
-        icon={<CircleDot className="w-6 h-6 text-amber-600" />}
+        accentColor="crown"
+        icon={<CircleDot className="w-6 h-6 text-amber-500" />}
       />
 
       {/* Silver 999 Card */}
       <PriceCard
         rate={rates.silver}
         accentColor="silver"
-        icon={<Shield className="w-6 h-6 text-slate-500" />}
+        icon={<Shield className="w-6 h-6 text-slate-300" />}
       />
     </div>
   );

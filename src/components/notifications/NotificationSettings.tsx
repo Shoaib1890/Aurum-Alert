@@ -1,7 +1,5 @@
 import React from 'react';
 import { Send, Clock, MessageSquare, ShieldCheck, GitBranch } from 'lucide-react';
-import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
 import { ManualTriggerButton } from './ManualTriggerButton';
 import { NotificationScheduleConfig } from '@/types/bullion';
 
@@ -11,106 +9,107 @@ interface NotificationSettingsProps {
 
 export function NotificationSettings({ config }: NotificationSettingsProps) {
   return (
-    <Card className="border-slate-200">
-      <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200 text-sky-600 flex items-center justify-center shrink-0">
+    <div className="glass-panel rounded-2xl p-6 border border-sky-500/25 relative overflow-hidden">
+      {/* Background radial glow */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-400 flex items-center justify-center shrink-0">
             <Send className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-slate-900">
-                Automated 7:00 AM IST Telegram Dispatch
+              <h3 className="text-base font-bold text-white tracking-tight font-mono">
+                AUTOMATED 07:00 AM IST TELEGRAM DISPATCH
               </h3>
-              <Badge variant="blue" size="sm" dot>
-                Daily at 07:00 AM IST
-              </Badge>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-300 font-bold">
+                07:00 AM IST
+              </span>
             </div>
-            <p className="text-xs text-slate-500">
-              Powered by Telegram Bot API and GitHub Actions cloud cron. Zero local dependencies.
+            <p className="text-xs text-slate-400 font-mono mt-0.5">
+              Powered by Telegram Bot API & GitHub Actions cloud cron. 100% independent of personal PC.
             </p>
           </div>
         </div>
 
-        <Badge variant="emerald" size="sm">
-          Telegram Active
-        </Badge>
-      </CardHeader>
+        <span className="text-xs px-3 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-cyber-emerald font-mono font-bold">
+          TELEGRAM ACTIVE
+        </span>
+      </div>
 
-      <CardBody className="p-6 space-y-5">
-        {/* Scheduled Specs Grid */}
+      <div className="py-6 space-y-6">
+        {/* Specs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Schedule card */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 mb-1">
-              <Clock className="w-4 h-4 text-sky-600" />
-              <span>Schedule Frequency</span>
+          <div className="p-4 rounded-xl bg-vault-900 border border-slate-800">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 font-mono mb-1">
+              <Clock className="w-4 h-4 text-sky-400" />
+              <span>SCHEDULE RULE</span>
             </div>
-            <div className="text-lg font-bold text-slate-900 font-mono">
+            <div className="text-lg font-bold text-white font-mono">
               07:00 AM IST
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Daily cron trigger: <code>30 1 * * *</code> (01:30 UTC)
+            <p className="text-[11px] text-slate-500 font-mono mt-0.5">
+              Cron Expression: <code>30 1 * * *</code> (01:30 UTC)
             </p>
           </div>
 
-          {/* Delivery Target */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 mb-1">
-              <MessageSquare className="w-4 h-4 text-sky-600" />
-              <span>Target Telegram Chat</span>
+          <div className="p-4 rounded-xl bg-vault-900 border border-slate-800">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 font-mono mb-1">
+              <MessageSquare className="w-4 h-4 text-sky-400" />
+              <span>TARGET CHAT ID</span>
             </div>
-            <div className="text-lg font-bold text-slate-900 font-mono">
-              {process.env.NEXT_PUBLIC_CHAT_ID_MASKED || 'Configured via Bot'}
+            <div className="text-lg font-bold text-sky-300 font-mono">
+              {process.env.NEXT_PUBLIC_CHAT_ID_MASKED || '624****151'}
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Set via TELEGRAM_CHAT_ID
+            <p className="text-[11px] text-slate-500 font-mono mt-0.5">
+              Securely set via TELEGRAM_CHAT_ID
             </p>
           </div>
 
-          {/* Cloud Reliability */}
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 mb-1">
-              <GitBranch className="w-4 h-4 text-emerald-600" />
-              <span>Free Cloud Scheduler</span>
+          <div className="p-4 rounded-xl bg-vault-900 border border-slate-800">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 font-mono mb-1">
+              <GitBranch className="w-4 h-4 text-cyber-emerald" />
+              <span>SERVERLESS CLOUD</span>
             </div>
-            <div className="text-sm font-bold text-slate-900">
-              GitHub Actions Cron
+            <div className="text-sm font-bold text-white font-mono">
+              GitHub Actions Runner
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              Runs in GitHub cloud runners (100% free, PC independent)
+            <p className="text-[11px] text-slate-500 font-mono mt-0.5">
+              Zero Local Dependency • 24/7 Reliability
             </p>
           </div>
         </div>
 
-        {/* Message Template Preview Box */}
-        <div className="rounded-xl border border-slate-200 bg-slate-900 text-slate-100 p-5 font-mono text-xs shadow-inner">
+        {/* Message Format Preview Terminal */}
+        <div className="rounded-xl border border-slate-800 bg-vault-950 p-5 font-mono text-xs shadow-2xl">
           <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-800 text-slate-400 text-[11px]">
-            <span className="flex items-center gap-1.5 font-sans font-semibold text-sky-400">
+            <span className="flex items-center gap-1.5 font-bold text-sky-400">
               <ShieldCheck className="w-4 h-4" />
-              Official Telegram Message Format (Dispatched at 07:00 AM IST)
+              Official Telegram Broadcast Message Format
             </span>
-            <span className="bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[10px]">
-              Telegram Bot API
+            <span className="text-[10px] text-slate-400">
+              parse_mode: Markdown
             </span>
           </div>
-          <div className="space-y-1.5 text-slate-300 leading-relaxed">
+          <div className="space-y-1 text-slate-300 leading-relaxed">
             <p className="text-slate-200">Good Morning! ☀️</p>
-            <p className="text-amber-400 font-bold">🔔 *AURUM ALERT – DAILY BULLION UPDATE*</p>
+            <p className="text-amber-300 font-bold">🔔 *AURUM ALERT – DAILY BULLION UPDATE*</p>
             <p className="text-slate-400">📅 Date: [Today's Date in IST]</p>
             <div className="pt-1">
-              <p className="text-amber-300 font-semibold">🥇 *GOLD PRICES*</p>
+              <p className="text-amber-200 font-semibold">🥇 *GOLD PRICES*</p>
               <p>• 24K Gold (10g): ₹[Price]</p>
               <p>• 22K Gold (10g): ₹[Price]</p>
             </div>
             <div className="pt-1">
-              <p className="text-slate-300 font-semibold">🥈 *SILVER PRICES*</p>
+              <p className="text-slate-200 font-semibold">🥈 *SILVER PRICES*</p>
               <p>• Silver (1kg): ₹[Price]</p>
             </div>
             <div className="pt-1">
-              <p className="text-emerald-400 font-semibold">📊 *DAILY MARKET MOVEMENT*</p>
-              <p>• Gold: [₹ Change] ([% Change])</p>
-              <p>• Silver: [₹ Change] ([% Change])</p>
+              <p className="text-cyber-emerald font-semibold">📊 *DAILY MARKET MOVEMENT*</p>
+              <p>• Gold: [₹ Delta] ([% Change])</p>
+              <p>• Silver: [₹ Delta] ([% Change])</p>
             </div>
             <div className="pt-2 text-slate-400 text-[11px] border-t border-slate-800/80">
               <p>📌 Source: GoldAPI.io</p>
@@ -121,30 +120,30 @@ export function NotificationSettings({ config }: NotificationSettingsProps) {
           </div>
         </div>
 
-        {/* Manual Test Action Section */}
+        {/* Manual Test Action */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
           <div>
-            <h4 className="text-xs font-bold text-slate-800">
-              Manual Notification Test Dispatch
+            <h4 className="text-xs font-bold text-white font-mono uppercase tracking-wider">
+              Manual Telegram Test Broadcast
             </h4>
-            <p className="text-xs text-slate-500">
-              Trigger a test message via Telegram Bot API to verify bot delivery to your personal Telegram chat.
+            <p className="text-xs text-slate-400 font-sans mt-0.5">
+              Trigger a test message right now to confirm delivery to your personal Telegram bot chat.
             </p>
           </div>
 
           <ManualTriggerButton />
         </div>
-      </CardBody>
+      </div>
 
-      <CardFooter className="bg-slate-50/70 py-3 px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-500">
-        <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-500" />
-          Cloud Automation Ready: .github/workflows/daily-bullion-alert.yml
+      <div className="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-slate-500 font-mono">
+        <span className="flex items-center gap-1.5 text-slate-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyber-emerald" />
+          Workflow: .github/workflows/daily-bullion-alert.yml
         </span>
-        <span className="font-mono text-slate-400">
-          Cron Rule: 30 1 * * * (01:30 UTC = 07:00 IST)
+        <span>
+          Cron: 30 1 * * * (01:30 UTC = 07:00 IST)
         </span>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }

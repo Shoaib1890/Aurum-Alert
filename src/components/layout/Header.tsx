@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Coins, Send, Bell } from 'lucide-react';
-import { Badge } from '@/components/ui/Badge';
+import { Coins, Send, Activity, ShieldCheck, Sparkles } from 'lucide-react';
 
 export function Header() {
   const [currentTimeIST, setCurrentTimeIST] = useState<string>('');
@@ -26,45 +25,49 @@ export function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <header className="sticky top-0 z-50 bg-vault-950/85 backdrop-blur-xl border-b border-amber-500/15">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo & Brand Identity */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center text-white shadow-md shadow-emerald-700/20">
-              <Coins className="w-5 h-5 text-amber-300" />
+          <div className="flex items-center gap-3.5">
+            <div className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 via-gold-500 to-amber-700 p-0.5 shadow-[0_0_20px_rgba(229,184,66,0.35)]">
+              <div className="w-full h-full bg-vault-950 rounded-[14px] flex items-center justify-center">
+                <Coins className="w-6 h-6 text-amber-300 animate-pulse-slow" />
+              </div>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-slate-900 tracking-tight">
-                  Daily Bullion Alert
+                <h1 className="text-xl font-black tracking-tight text-white font-mono flex items-center gap-1.5">
+                  <span className="gold-gradient-text">AURUM</span>
+                  <span className="text-slate-200">ALERT</span>
                 </h1>
-                <Badge variant="emerald" size="sm">
-                  Spot INR
-                </Badge>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 font-bold tracking-wider">
+                  VAULT v2.0
+                </span>
               </div>
-              <p className="text-xs text-slate-500 font-medium">
-                National Spot Gold & Silver Morning Digest
+              <p className="text-[11px] text-slate-400 font-mono tracking-wide">
+                Institutional Bullion Benchmark Terminal & Telegram Engine
               </p>
             </div>
           </div>
 
-          {/* Right Header: Clock & Schedule Status */}
+          {/* Right Header: Clock & Telegram Engine */}
           <div className="flex items-center gap-4">
-            <div className="hidden md:flex flex-col items-end">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 font-mono">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                {currentTimeIST || 'Loading IST...'}
+            <div className="hidden lg:flex flex-col items-end">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-200">
+                <span className="w-2 h-2 rounded-full bg-cyber-emerald animate-ping" />
+                {currentTimeIST || 'SYNCING IST...'}
               </div>
-              <span className="text-[11px] text-slate-400">
-                Scheduled Daily Broadcast: 07:00 AM IST
+              <span className="text-[11px] text-slate-400 font-mono">
+                SCHEDULED BROADCAST: 07:00 AM IST
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">
-                <Send className="w-3.5 h-3.5 text-sky-600" />
-                <span>Morning Telegram Engine</span>
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2 text-xs text-slate-200 bg-vault-900 px-3.5 py-2 rounded-xl border border-sky-500/30 font-mono shadow-inner">
+                <Send className="w-3.5 h-3.5 text-sky-400" />
+                <span className="hidden sm:inline">Telegram Cloud Engine</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
               </div>
             </div>
           </div>

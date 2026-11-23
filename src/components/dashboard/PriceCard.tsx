@@ -1,7 +1,5 @@
 import React from 'react';
-import { TrendingUp, TrendingDown, Minus, Info, AlertCircle, Clock } from 'lucide-react';
-import { Card, CardBody, CardFooter } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
+import { TrendingUp, TrendingDown, Minus, Info, Sparkles, ShieldCheck } from 'lucide-react';
 import { BullionRate } from '@/types/bullion';
 import {
   formatINR,
@@ -13,7 +11,7 @@ import {
 interface PriceCardProps {
   rate: BullionRate;
   icon?: React.ReactNode;
-  accentColor?: 'gold' | 'silver';
+  accentColor?: 'gold' | 'silver' | 'crown';
 }
 
 export function PriceCard({ rate, icon, accentColor = 'gold' }: PriceCardProps) {
@@ -22,127 +20,128 @@ export function PriceCard({ rate, icon, accentColor = 'gold' }: PriceCardProps) 
   const isNegative = (rate.changeAmount ?? 0) < 0;
   const isNeutral = (rate.changeAmount ?? 0) === 0;
 
-  return (
-    <Card className="hover:shadow-md transition-all duration-200 border-slate-200/90 relative overflow-hidden group">
-      {/* Decorative accent top line */}
-      <div
-        className={`h-1.5 w-full ${
-          accentColor === 'gold'
-            ? 'bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600'
-            : 'bg-gradient-to-r from-slate-400 via-slate-300 to-slate-500'
-        }`}
-      />
+  const getBorderColor = () => {
+    if (accentColor === 'silver') return 'from-slate-400 via-slate-200 to-slate-500';
+    if (accentColor === 'crown') return 'from-amber-600 via-amber-400 to-yellow-600';
+    return 'from-amber-400 via-yellow-300 to-amber-600';
+  };
 
-      <CardBody className="p-6">
-        {/* Header row: Metal Name & Purity */}
-        <div className="flex items-start justify-between gap-3 mb-4">
+  const getBadgeStyle = () => {
+    if (accentColor === 'silver') return 'bg-slate-700/50 text-slate-200 border-slate-500/40';
+    if (accentColor === 'crown') return 'bg-amber-600/20 text-amber-300 border-amber-600/40';
+    return 'bg-amber-500/20 text-amber-200 border-amber-500/40';
+  };
+
+  return (
+    <div className="glass-panel rounded-2xl relative overflow-hidden group hover:border-amber-400/50 transition-all duration-300 hover:shadow-[0_0_35px_rgba(229,184,66,0.12)]">
+      {/* Top Metallic Foil Line */}
+      <div className={`h-1.5 w-full bg-gradient-to-r ${getBorderColor()}`} />
+
+      <div className="p-6">
+        {/* Header Row */}
+        <div className="flex items-start justify-between gap-3 mb-5">
           <div className="flex items-center gap-3">
             <div
-              className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 shadow-xs ${
-                accentColor === 'gold'
-                  ? 'bg-amber-50 text-amber-600 border border-amber-200'
-                  : 'bg-slate-100 text-slate-600 border border-slate-200'
+              className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border shadow-inner ${
+                accentColor === 'silver'
+                  ? 'bg-slate-800/80 text-slate-200 border-slate-700'
+                  : 'bg-vault-900 text-amber-400 border-amber-500/30'
               }`}
             >
               {icon}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-950 transition-colors">
+                <h3 className="text-base font-bold text-white group-hover:text-amber-200 transition-colors tracking-tight">
                   {rate.metalName}
                 </h3>
-                {rate.isStale && (
-                  <Badge variant="amber" size="sm">
-                    Cached / Stale
-                  </Badge>
-                )}
               </div>
-              <p className="text-xs text-slate-500 font-medium">{rate.purity}</p>
+              <p className="text-xs text-slate-400 font-mono mt-0.5">{rate.purity}</p>
             </div>
           </div>
 
-          <Badge variant="slate" size="sm" className="font-mono">
-            {rate.unit === '10g' ? 'per 10g' : 'per 1kg'}
-          </Badge>
+          <span
+            className={`text-xs px-2.5 py-1 rounded-lg border font-mono font-semibold ${getBadgeStyle()}`}
+          >
+            {rate.unit === '10g' ? '10 GRAMS' : '1 KILOGRAM'}
+          </span>
         </div>
 
-        {/* Price Display */}
+        {/* Live Price Display */}
         <div className="my-5">
           {hasPrice ? (
             <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-extrabold text-slate-900 font-mono tracking-tight tabular-numbers">
+              <div className="flex items-baseline gap-2.5">
+                <span
+                  className={`text-3.5xl sm:text-4xl font-black font-mono tracking-tight tabular-numbers ${
+                    accentColor === 'silver' ? 'silver-gradient-text' : 'gold-gradient-text'
+                  }`}
+                >
                   {formatINR(rate.price)}
                 </span>
-                <span className="text-xs font-semibold text-slate-400">INR</span>
+                <span className="text-xs font-mono font-bold text-slate-400">INR</span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-1">
-                International Wholesale Spot (Ex-Customs / GST)
+              <p className="text-[11px] text-slate-400 font-mono mt-1 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span>Wholesale Spot Rate (Ex-Duty / GST)</span>
               </p>
             </div>
           ) : (
-            <div className="py-3 px-3.5 rounded-xl bg-slate-50 border border-dashed border-slate-200 text-center">
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 mb-1">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                Awaiting Live Market Sync
-              </div>
-              <p className="text-[11px] text-slate-400 leading-tight">
-                Add GOLDAPI_API_KEY to .env.local to activate real-time spot prices.
-              </p>
+            <div className="py-4 px-3.5 rounded-xl bg-vault-900 border border-dashed border-slate-700 text-center">
+              <span className="text-xs font-mono text-amber-300">Awaiting Price Feed</span>
             </div>
           )}
         </div>
 
-        {/* Change Comparison & Previous Close Details */}
-        <div className="pt-3 border-t border-slate-100 space-y-2 text-xs">
+        {/* Price Delta & Previous Close Section */}
+        <div className="pt-4 border-t border-slate-800 space-y-2.5 text-xs">
           <div className="flex items-center justify-between">
-            <span className="text-slate-500 font-medium">Session Change:</span>
+            <span className="text-slate-400 font-medium">Session Movement:</span>
             {hasPrice ? (
               <div className="flex items-center gap-1.5 font-medium">
                 {isPositive && (
-                  <span className="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 font-mono">
+                  <span className="inline-flex items-center gap-1 text-cyber-emerald bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/30 font-mono font-bold">
                     <TrendingUp className="w-3.5 h-3.5" />
                     {formatChangeDelta(rate.changeAmount)} ({formatPercentage(rate.changePercentage)})
                   </span>
                 )}
                 {isNegative && (
-                  <span className="inline-flex items-center gap-1 text-rose-700 bg-rose-50 px-2.5 py-1 rounded-md border border-rose-200 font-mono">
+                  <span className="inline-flex items-center gap-1 text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/30 font-mono font-bold">
                     <TrendingDown className="w-3.5 h-3.5" />
                     {formatChangeDelta(rate.changeAmount)} ({formatPercentage(rate.changePercentage)})
                   </span>
                 )}
                 {isNeutral && (
-                  <span className="inline-flex items-center gap-1 text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 font-mono">
+                  <span className="inline-flex items-center gap-1 text-slate-400 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700 font-mono">
                     <Minus className="w-3.5 h-3.5" />
                     Unchanged
                   </span>
                 )}
               </div>
             ) : (
-              <span className="text-slate-400 font-mono text-[11px]">Pending Key</span>
+              <span className="text-slate-500 font-mono text-[11px]">Syncing</span>
             )}
           </div>
 
-          {/* Previous Close Row */}
-          <div className="flex items-center justify-between text-slate-500 text-[11px]">
-            <span>Previous Trading Close:</span>
-            <span className="font-mono font-medium text-slate-700">
+          <div className="flex items-center justify-between text-slate-400 text-[11px]">
+            <span>Prior Trading Close:</span>
+            <span className="font-mono font-semibold text-slate-200">
               {rate.previousClose ? formatINR(rate.previousClose) : '—'}
             </span>
           </div>
         </div>
-      </CardBody>
+      </div>
 
-      {/* Footer: Source Notice & Timestamp */}
-      <CardFooter className="flex items-center justify-between text-[11px] text-slate-500 py-3 px-6 bg-slate-50/60">
+      {/* Footer Strip */}
+      <div className="flex items-center justify-between text-[11px] text-slate-400 py-2.5 px-6 bg-vault-950/70 border-t border-slate-800/80 font-mono">
         <span className="flex items-center gap-1 truncate max-w-[60%]">
-          <Info className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <span className="truncate">GoldAPI (Spot INR)</span>
+          <ShieldCheck className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span className="truncate">GoldAPI Spot Feed</span>
         </span>
-        <span className="font-mono text-slate-400 text-[10px]">
+        <span className="text-slate-500 text-[10px]">
           {rate.tradingDate ? formatISTTimestamp(rate.tradingDate) : 'Today'}
         </span>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }

@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #06070a;
+  --foreground: #f1f5f9;
 }
 
 body {
@@ -13,9 +13,63 @@ body {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Ensure tabular numbers for financial figures to prevent jitter */
+/* Tabular numbers for financial precision */
 .tabular-numbers {
   font-variant-numeric: tabular-nums;
+}
+
+/* Luxury Glassmorphism & Metallic Sheen */
+.glass-panel {
+  background: rgba(14, 17, 23, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(229, 184, 66, 0.15);
+}
+
+.glass-panel:hover {
+  border-color: rgba(229, 184, 66, 0.35);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFF9E6 0%, #F5D362 40%, #E5B842 70%, #CA9927 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.silver-gradient-text {
+  background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 50%, #94A3B8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.metallic-gold-border {
+  border-image: linear-gradient(to bottom right, rgba(245, 211, 98, 0.5), rgba(202, 153, 39, 0.1)) 1;
+}
+
+/* Custom Cyber Glows */
+.glow-gold {
+  box-shadow: 0 0 40px -10px rgba(229, 184, 66, 0.25);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 35px -8px rgba(0, 240, 160, 0.2);
+}
+
+/* Custom sleek dark scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090a0e;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2330;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ca9927;
 }
