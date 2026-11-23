@@ -48,7 +48,7 @@ export function BullionVaultCanvas({
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
 
-    currentMount.replaceChildren(renderer.domElement);
+    currentMount.appendChild(renderer.domElement);
 
     // 2. Texture Generator for Ingot Hallmark
     const createIngotTexture = (metal: MetalType) => {
@@ -335,6 +335,9 @@ export function BullionVaultCanvas({
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onMouseUp);
       window.removeEventListener('resize', handleResize);
+      if (renderer.domElement.parentNode === currentMount) {
+        currentMount.removeChild(renderer.domElement);
+      }
       renderer.dispose();
       geometry.dispose();
       material.dispose();
@@ -374,12 +377,13 @@ export function BullionVaultCanvas({
       </div>
 
       {/* Three.js Canvas Container */}
-      <div
-        ref={mountRef}
-        className="w-full h-64 sm:h-72 cursor-grab active:cursor-grabbing relative flex items-center justify-center"
-      >
+      <div className="w-full h-64 sm:h-72 cursor-grab active:cursor-grabbing relative flex items-center justify-center">
+        {/* Dedicated WebGL canvas mount container that has ZERO React children */}
+        <div ref={mountRef} className="w-full h-full absolute inset-0 overflow-hidden" />
+
+        {/* React-controlled overlay */}
         {!isLoaded && (
-          <div className="flex flex-col items-center gap-2 text-slate-500 text-xs">
+          <div className="flex flex-col items-center gap-2 text-slate-500 text-xs pointer-events-none z-10">
             <Sparkles className="w-5 h-5 text-amber-400 animate-spin" />
             <span>Forging 3D Specimen...</span>
           </div>
